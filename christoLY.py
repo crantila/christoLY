@@ -1,29 +1,31 @@
-#! /usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 from sys import argv
-from os import system
+from subprocess import Popen, PIPE
 
-## This script converts from MusicXML to PDF via LilyPond
-print( "christoLY.py in Action!" )
-#print( "Convert a MusicXML File to LilyPond and Display It" )
-#print( "--------------------------------------------------" )
+PDF_READER = 'okular'
+LILYPOND = 'lilypond'
+MUSICXML2LY = 'musicxml2ly'
 
-## Make sure we have a file name!
-if ( len(argv) < 2 ):
-   print( "Usage: python christoLY.py <musicxml_filename>" )
-   quit()
 
-#print( "Using MusicXML file: " + argv[1] )
+def christoly():
+    if len(argv) < 2:
+        print('Usage: python christoLY.py <musicxml_filename>')
+        return None
+    else:
+        print('christoLY.py in Action!')
+        filename = argv[1]
 
-## Options
-musicxml2lyProgramOutput = '/home/crantila/musicxml2ly.log'
-lyProgramOutput = '/home/crantila/lilypond.log'
-pdfReader = 'okular'
+    cmd = Popen((MUSICXML2LY, '--lxml', '-o', '{}.ly'.format(filename), filename), stdout=PIPE, stderr=PIPE)
+    cmd.communicate(input=None)
 
-## Later, I hope to add in some sort of sanity check here
-filename = argv[1]
+    cmd = Popen((LILYPOND, '--pdf', '-o', filename, '{}.ly'.format(filename)), stdout=PIPE, stderr=PIPE)
+    cmd.communicate(input=None)
 
-system( 'musicxml2ly --lxml -o ' + filename + '.ly '+ filename + ' &> ' + musicxml2lyProgramOutput )
-system( 'lilypond --pdf -o ' + filename + ' ' + filename + '.ly &> ' + lyProgramOutput )
-system( pdfReader + ' ' + filename + '.pdf &' )
+    Popen((PDF_READER, '{}.pdf'.format(filename)), stdout=PIPE, stderr=PIPE)
+    # don't wait for the PDF reader to close
+
+
+if '__main__' == __name__:
+    christoly();
