@@ -28,4 +28,4 @@ def christoly():
 
 
 if '__main__' == __name__:
-    christoly();
+    christoly()
