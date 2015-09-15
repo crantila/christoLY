@@ -22,7 +22,7 @@ executable. It should be already, but make sure. I do this:
 
     $ sudo chmod +x /usr/local/bin/christoLY
 
-Now you should be able to run "christLY" as a command from anywhere. If you
+Now you should be able to run "christoLY" as a command from anywhere. If you
 want to set christoLY as your MusicXML output program for music21:
 
     >>> from music21 import *
